@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./index.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                >
+
+    <ui:define name="top">
+        Regions
+    </ui:define>
+
+    <ui:define name="content">
+        <f:view>
+
+
+            <h:form id="form1">
+                <p:panelGrid columns="3" id="action_buttons_pays">
+                    <p:commandButton widgetVar="add" ignoreAutoUpdate="true" actionListener="#{regionsController.prepareCreate}" update=":add_edit_form:edit" oncomplete="PF('e_dialog').show()" value="Ajouter" style="background-color: green; color: white" />
+                    <p:commandButton actionListener="#{regionsController.prepareEdit()}" partialSubmit="true" update=":add_edit_form" oncomplete="PF('e_dialog').show()" value="Modifier" style="background-color: orange; color: white" />
+                    <p:commandButton actionListener="#{regionsController.deleteRegion()}" update=":add_edit_form, table1" oncomplete="PF('e_Dialog').show()" value ="Supprimer" style="background-color: red; color: white" />
+                </p:panelGrid>
+                 <p:separator />
+                 <h:outputText value="Liste des Regions"/>                
+                <p:growl id="msg" showDetail="true" sticky="true" />                   
+                <p:dataTable id="table1" value="#{regionsController.listOfRegion}" var="item" selectionMode="single" selection="#{regionsController.region}" rowKey="#{item.id}" 
+                    paginator="true"
+                    rows="10"
+                    rowIndexVar="index"
+                    rowsPerPageTemplate="10,20,30,40,50"
+                    draggableColumns="true"
+                    resizableColumns="true"
+                    scrollHeight="100"
+                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+                    
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nom"/>
+                        </f:facet>
+                        <h:outputText value="#{item.nom}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Pays"/>
+                        </f:facet>
+                        <h:outputText value="#{item.pays}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Deleted"/>
+                        </f:facet>
+                        <h:outputText value="#{item.deleted}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Created"/>
+                        </f:facet>
+                        <h:outputText value="#{item.created}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Modified"/>
+                        </f:facet>
+                        <h:outputText value="#{item.modified}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+            
+
+
+            <h:form id="add_edit_form">
+                <p:dialog closable="false" rendered="#{regionsController.region != null }" modal="true" id="edit" widgetVar="e_dialog">                
+                  <f:facet name="header">
+                        <h:outputText value="Ajouter/Modifier une Region"/>
+                  </f:facet>
+                
+                <p:panelGrid id="fields" columns="2">                          
+                    <p:outputLabel value="Nom:" for="nom" />
+                    <p:inputText id="nom" value="#{regionsController.region.nom}" title="Nom" required="true" requiredMessage="The Nom field is required."/>
+                    <p:outputLabel value="Pays:" for="pays" />
+                    <p:selectOneMenu id="pays" value="#{regionsController.region.pays}" title="Pays" required="true" requiredMessage="The Pays field is required.">                    
+                        <f:selectItem itemLabel="Choisissez le pays" itemValue=""/>
+                        <f:selectItems value="#{regionsController.listOfPays}"
+                                            var="pys"
+                                            itemValue="#{pys.id}"
+                                            itemLabel="#{pys.nom}"
+                                           />
+                    </p:selectOneMenu>
+                </p:panelGrid>
+                    <f:facet name="footer">
+                        <p:panelGrid style="width: 100%; text-align: center;" columns="2">
+                            <p:commandButton ignoreAutoUpdate="true"  value="cancel" immediate="true" oncomplete="PF('e_dialog').hide()"><p:resetInput target="fields"/> </p:commandButton>
+                            <p:commandButton ignoreAutoUpdate="true" actionListener="#{regionsController.persist()}" value="Enregistre" update="fields, :form1:msg, :form1:table1" process="edit, :add_edit_form"  />
+                        </p:panelGrid>
+                    </f:facet>   
+                </p:dialog>
+            </h:form>
+            
+        </f:view>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./index.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                >
+
+    <ui:define name="top">
+        Pays
+    </ui:define>
+
+    <ui:define name="content">        
+        <f:view>
+
+
+            <h:form id="form1">
+                <p:panelGrid columns="3" id="action_buttons_pays">
+                    <p:commandButton widgetVar="add" ignoreAutoUpdate="true" actionListener="#{paysController.prepareCreate}" update=":add_edit_form:edit" oncomplete="PF('e_dialog').show()" value="Ajouter" style="background-color: green; color: white" />
+                    <p:commandButton actionListener="#{paysController.prepareEdit()}" partialSubmit="true" update=":add_edit_form" oncomplete="PF('e_dialog').show()" value="Modifier" style="background-color: orange; color: white" />
+                    <p:commandButton actionListener="#{paysController.deletePays()}" update=":delete_form, table1" oncomplete="PF('e_Dialog_del').show()" value ="Supprimer" style="background-color: red; color: white" />
+                </p:panelGrid>
+                 <p:separator />
+                <h:outputText value="Liste des Pays"/>             
+                <p:growl id="msg" showDetail="true" sticky="true" />                   
+                 <p:dataTable id="table1" value="#{paysController.listOfPays}" var="item" selectionMode="single" selection="#{paysController.pays}" rowKey="#{item.id}" 
+                    paginator="true"
+                    rows="10"
+                    rowIndexVar="index"
+                    rowsPerPageTemplate="10,20,30,40,50"
+                    draggableColumns="true"
+                    resizableColumns="true"
+                    scrollHeight="100"
+                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+                 
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Nom"/>
+                        </f:facet>
+                        <h:outputText value="#{item.nom}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Iso2"/>
+                        </f:facet>
+                        <h:outputText value="#{item.iso2}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Iso3"/>
+                        </f:facet>
+                        <h:outputText value="#{item.iso3}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Devise"/>
+                        </f:facet>
+                        <h:outputText value="#{item.devise}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Created"/>
+                        </f:facet>
+                        <h:outputText value="#{item.created}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Modified"/>
+                        </f:facet>
+                        <h:outputText value="#{item.modified}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>                    
+                </p:dataTable>
+            </h:form>
+            
+
+
+            <h:form id="add_edit_form" >
+                <p:dialog closable="false" rendered="#{paysController.pays != null }" modal="true" id="edit" widgetVar="e_dialog">                
+                  <f:facet name="header">
+                        <h:outputText value="Ajouter/Modifier un Pays"/>
+                  </f:facet>
+                <p:panelGrid id="fields" columns="2">
+                    
+                    <p:outputLabel value="Nom:" for="nom" />
+                    <p:inputText id="nom" value="#{paysController.pays.nom}" title="Nom" required="true" requiredMessage="The Nom field is required."/>                   
+                    <p:outputLabel value="Iso2:" for="iso2" />
+                    <p:inputText id="iso2" value="#{paysController.pays.iso2}" title="Iso2" required="true" requiredMessage="The Iso2 field is required."/>                    
+                    <p:outputLabel value="Iso3:" for="iso3" />
+                    <p:inputText id="iso3" value="#{paysController.pays.iso3}" title="Iso3" required="true" requiredMessage="The Iso3 field is required."/>                   
+                    <p:outputLabel value="Devise:" for="devise" />
+                    <p:inputText id="devise" value="#{paysController.pays.devise}" title="Devise" required="true" requiredMessage="The Devise field is required."/>
+                </p:panelGrid>
+                 <f:facet name="footer">
+                        <p:panelGrid style="width: 100%; text-align: center;" columns="2">
+                            <p:commandButton ignoreAutoUpdate="true"  value="cancel" immediate="true" oncomplete="PF('e_dialog').hide()"><p:resetInput target="fields"/> </p:commandButton>
+                            <p:commandButton ignoreAutoUpdate="true" actionListener="#{paysController.persist()}" value="Enregistre" update="fields, :form1:msg, :form1:table1" process="edit, :add_edit_form"  />
+                        </p:panelGrid>
+                    </f:facet>   
+                </p:dialog>
+            </h:form>
+            
+             <h:form id="delete_form" >
+                <p:dialog closable="false" rendered="#{paysController.pays != null }" modal="true" id="delete" widgetVar="e_dialog_del">                
+                  <f:facet name="header">
+                        <h:outputText value="Supprimer un Pays"/>
+                  </f:facet>
+                <p:panelGrid id="fields_del" columns="2">                    
+                    <p:outputLabel value="Are you sure you want to delete this country?" />                   
+                </p:panelGrid>
+                 <f:facet name="footer">
+                        <p:panelGrid style="width: 100%; text-align: center;" columns="2">
+                            <p:commandButton ignoreAutoUpdate="true"  value="cancel" immediate="true" oncomplete="PF('e_dialog_del').hide()"><p:resetInput target="fields_del"/> </p:commandButton>
+                            <p:commandButton ignoreAutoUpdate="true" actionListener="#{paysController.persist()}" value="Enregistre" update="fields_del, :form1:msg, :form1:table1" process="delete, delete_form"  />
+                        </p:panelGrid>
+                    </f:facet>   
+                </p:dialog>
+            </h:form>
+
+            
+        </f:view>
+
+        
+        
+    </ui:define>
+
+</ui:composition>

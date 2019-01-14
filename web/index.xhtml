@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputStylesheet name="./css/cssLayout.css"/>
+        <title>LABS 1</title>
+    </h:head>
+
+    <h:body>
+
+        <div id="top">
+            <ui:insert name="top">LABS</ui:insert>
+        </div>
+        <div>
+            <div id="left">
+                <!--<ui:insert name="left">Left</ui:insert>-->
+                
+                <h:form id="sidebar-menu-form">
+    <p:growl id="messages" showDetail="true"/>
+ 
+    <p:slideMenu style="width:180px">
+        <p:submenu label="#{lm.Town}" icon="ui-icon-refresh">
+            <p:menuitem immediate="true" action="pays.xhtml?faces-redirect=true" value="#{lm.AddnewCountry}" update="messages" icon="ui-icon-disk" />
+        </p:submenu>
+        <p:separator />
+        <p:submenu label="Regions" icon="ui-icon-newwin">
+            <p:menuitem immediate="true" action="regions.xhtml?faces-redirect=true" value="Ajouter une Region" update="messages" icon="ui-icon-disk" />
+        </p:submenu>
+        <p:separator />
+        <p:submenu label="Villes" icon="ui-icon-extlink">
+            <p:menuitem immediate="true" action="ville.xhtml?faces-redirect=true" value="Ajouter une Ville" update="messages" icon="ui-icon-disk" />
+        </p:submenu>
+        <p:separator />
+        <p:submenu label="#{lm.language}" icon="ui-icon-extlink">            
+            <p:menuitem immediate="true" action="#{languageController.english()}" value="#{lm.English}" />
+            <p:menuitem immediate="true" action="#{languageController.french()}" value="#{lm.French}" />
+        </p:submenu>
+    </p:slideMenu>
+ 
+    <p:separator />
+</h:form>
+                
+            </div>
+            <div id="content" class="left_content" style=" background-color: #dddddd;
+    padding: 5px;
+    margin-left: 261px;
+    /*width: 99%;*/
+    height: 400px;">
+                <ui:insert name="content"> </ui:insert>
+            </div>
+        </div>
+        <div id="bottom" style=" position: relative;
+    background-color: #c2dfef;
+    padding: 5px;
+    margin: 1px 0px 0px 0px;
+    border-radius:0px 0px 10px 10px;">
+           <!-- <ui:insert name="bottom">Bottom</ui:insert> -->
+           <center>
+               <h:outputText value="&copy; Copyright LAB1 2019" style="font-size: 8pt; font-style: italic; font-weight: bold;"></h:outputText>
+           </center>
+        </div>
+
+    </h:body>
+
+</html>
